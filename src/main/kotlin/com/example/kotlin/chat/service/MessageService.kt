@@ -7,8 +7,6 @@ interface MessageService {
 
     suspend fun latest(): Flow<MessageVM>
 
-    suspend fun after(messageId: String): Flow<MessageVM>
-
     suspend fun stream(): Flow<MessageVM>
 
     suspend fun post(messages: Flow<MessageVM>)

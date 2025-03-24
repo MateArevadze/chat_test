@@ -17,9 +17,12 @@ fun MessageVM.asDomainObject(contentType: ContentType = ContentType.MARKDOWN): M
     id
 )
 
+fun String.toAsterisks() : String = this[0] + "****" + this[this.length-1]
+
+
 fun Message.asViewModel(): MessageVM = MessageVM(
-    contentType.toString(),
-    UserVM(username, URL(userAvatarImageLink)),
+    content,
+    UserVM(username.toAsterisks(), URL(userAvatarImageLink)),
     sent,
     id
 )

@@ -1,41 +1,33 @@
 package com.example.kotlin.chat.service
 
-import com.example.kotlin.chat.asDomainObject
-import com.example.kotlin.chat.mapToViewModel
-import com.example.kotlin.chat.model.Message
+
 import com.example.kotlin.chat.model.MessageVM
+import com.example.kotlin.chat.toAsterisks
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class PersistentMessageService : MessageService {
-    private val messages = LinkedList<Message>();
-    private val maxSize = 500;
-
-    val sender: MutableSharedFlow<MessageVM> = MutableSharedFlow()
+class PersistentMessageService() : MessageService {
+    private val maxSize = 100
+    val sender: MutableSharedFlow<MessageVM> = MutableSharedFlow(replay = maxSize,
+                                                    extraBufferCapacity = maxSize)
 
     override  suspend fun latest(): Flow<MessageVM>  {
-        return messages.mapToViewModel().asFlow()
+        return sender.replayCache.asFlow()
     }
-
-    override suspend fun after(messageId: String): Flow<MessageVM> {
-        return messages.filter{msg -> msg.id == messageId}
-                        .mapToViewModel().asFlow()
-    }
-
     override suspend fun stream(): Flow<MessageVM> = sender
 
     override suspend fun post(messages: Flow<MessageVM>) {
-        messages.onEach{sender.emit(it)}.collect(){
-            if (this.messages.size == maxSize) {
-                this.messages.removeFirst()
-            }
-            this.messages.add(it.asDomainObject())
+        messages
+            .collect(){
+                it.user.name = it.user.name.toAsterisks()
+                sender.emit(it)
         }
     }
 
     override suspend fun clean() {
-        messages.clear()
+        sender.resetReplayCache();
     }
 }

@@ -2,4 +2,4 @@ package com.example.kotlin.chat.model
 
 import java.net.URL
 
-data class UserVM(val name: String, val avatarImageLink: URL)
+data class UserVM(var name: String, val avatarImageLink: URL)
