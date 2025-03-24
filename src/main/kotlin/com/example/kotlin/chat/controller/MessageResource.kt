@@ -1,7 +1,7 @@
 package com.example.kotlin.chat.controller
 
+import com.example.kotlin.chat.model.MessageVM
 import com.example.kotlin.chat.service.MessageService
-import com.example.kotlin.chat.service.MessageVM
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.onStart
@@ -18,7 +18,7 @@ class MessageResource(val messageService: MessageService) {
         messageService.post(inboundMessages)
 
     @MessageMapping("stream")
-    fun send(): Flow<MessageVM> = messageService
+    suspend fun send(): Flow<MessageVM> = messageService
         .stream()
         .onStart {
             emitAll(messageService.latest())

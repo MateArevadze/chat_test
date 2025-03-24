@@ -1,9 +1,9 @@
 package com.example.kotlin.chat
 
-import com.example.kotlin.chat.repository.ContentType
-import com.example.kotlin.chat.repository.Message
-import com.example.kotlin.chat.service.MessageVM
-import com.example.kotlin.chat.service.UserVM
+import com.example.kotlin.chat.model.ContentType
+import com.example.kotlin.chat.model.Message
+import com.example.kotlin.chat.model.MessageVM
+import com.example.kotlin.chat.model.UserVM
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.intellij.markdown.flavours.commonmark.CommonMarkFlavourDescriptor

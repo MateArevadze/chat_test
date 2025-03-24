@@ -1,4 +1,4 @@
-package com.example.kotlin.chat.repository
+package com.example.kotlin.chat.model
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
@@ -12,7 +12,3 @@ data class Message(
     val username: String,
     val userAvatarImageLink: String,
     @Id var id: String? = null)
-
-enum class ContentType {
-    PLAIN, MARKDOWN
-}
