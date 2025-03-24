@@ -26,9 +26,8 @@ class PersistentMessageService : MessageService {
 
     override suspend fun stream(): Flow<MessageVM> = sender
 
-    @Synchronized
     override suspend fun post(messages: Flow<MessageVM>) {
-        messages.collect() {
+        messages.onEach{sender.emit(it)}.collect(){
             if (this.messages.size == maxSize) {
                 this.messages.removeFirst()
             }
