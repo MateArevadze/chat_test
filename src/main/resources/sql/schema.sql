@@ -1,9 +1,12 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 CREATE TABLE IF NOT EXISTS messages
 (
-    id                     VARCHAR(60) DEFAULT RANDOM_UUID() PRIMARY KEY,
+    id                     VARCHAR(60) DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id                VARCHAR(60)  NOT NULL,
+    game_id                VARCHAR(60)  NOT NULL,
     content                VARCHAR      NOT NULL,
-    content_type           VARCHAR(128) NOT NULL,
-    sent                   TIMESTAMP    NOT NULL,
-    username               VARCHAR(60)  NOT NULL,
+    time_sent              TIMESTAMP    NOT NULL,
     user_avatar_image_link VARCHAR(256) NOT NULL
 );
+
