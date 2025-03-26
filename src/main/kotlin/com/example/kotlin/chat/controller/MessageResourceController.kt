@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller
 
 @Controller
 @MessageMapping("api.v1.messages")
-class MessageResource(val messageService: MessageService) {
+class MessageResourceController(val messageService: MessageService) {
 
     @MessageMapping("stream")
     suspend fun receive(@Payload inboundMessages: Flow<MessageVM>) =
