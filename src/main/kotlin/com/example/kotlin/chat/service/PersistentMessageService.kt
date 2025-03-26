@@ -37,6 +37,6 @@ class PersistentMessageService(private val messageRepository : MessageRepository
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun clean() {
-        sender.resetReplayCache()
+        messageRepository.deleteAll()
     }
 }
