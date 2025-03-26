@@ -17,8 +17,7 @@ class PersistentMessageService(private val messageRepository : MessageRepository
 
     val logger = LoggerFactory.getLogger(PersistentMessageService::class.java)
     private val maxSize = 3
-    val sender: MutableSharedFlow<MessageVM> = MutableSharedFlow(replay = maxSize,
-                                                    extraBufferCapacity = maxSize)
+    val sender: MutableSharedFlow<MessageVM> = MutableSharedFlow()
     override  suspend fun latest(): Flow<MessageVM>  {
         logger.info(sender.replayCache.size.toString())
         return messageRepository.findLatest().mapToViewModel()
@@ -28,11 +27,10 @@ class PersistentMessageService(private val messageRepository : MessageRepository
 
     override suspend fun post(messages: Flow<MessageVM>) {
         messages
-            .collect {
-                it.user.name = it.user.name.toAsterisks()
-                sender.emit(it)
-                messageRepository.save(it.asDomainObject())
-            }
+            .onEach {it.user.name = it.user.name.toAsterisks(); sender.emit(it) }
+            .map { it.asDomainObject() }
+            .let { messageRepository.saveAll(it) }
+            .collect()
 
     }
 
