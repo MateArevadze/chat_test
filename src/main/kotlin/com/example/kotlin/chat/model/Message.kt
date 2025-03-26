@@ -10,5 +10,4 @@ data class Message(
     val gameId: String,
     val content: String,
     val timeSent: Instant,
-    val userAvatarImageLink: String,
     @Id var id: String? = null)
