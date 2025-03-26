@@ -10,7 +10,7 @@ import java.util.*
 
 @Service
 class PersistentMessageService() : MessageService {
-    private val maxSize = 100
+    private val maxSize = 5
     val sender: MutableSharedFlow<MessageVM> = MutableSharedFlow(replay = maxSize,
                                                     extraBufferCapacity = maxSize)
 

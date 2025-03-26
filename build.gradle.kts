@@ -23,7 +23,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
 	implementation("org.springframework.boot:spring-boot-starter-rsocket")
-	implementation("io.r2dbc:r2dbc-h2")
+	implementation("io.r2dbc:r2dbc-postgresql")
 
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("com.github.javafaker:javafaker:1.0.2")
