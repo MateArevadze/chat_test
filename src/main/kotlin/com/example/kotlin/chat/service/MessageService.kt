@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface MessageService {
 
-    suspend fun latest(): Flow<MessageVM>
+    suspend fun latest(gameId: String): Flow<MessageVM>
 
     suspend fun stream(): Flow<MessageVM>
 

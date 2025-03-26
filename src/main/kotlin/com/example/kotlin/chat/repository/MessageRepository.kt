@@ -11,9 +11,10 @@ interface MessageRepository : CoroutineCrudRepository<Message, String> {
     @Query("""
         SELECT * FROM (
             SELECT * FROM MESSAGES
-            ORDER BY sent DESC
+            WHERE game_id = :gameId
+            ORDER BY time_sent DESC
             LIMIT :maxSize
-        ) as "M*" ORDER BY sent
+        ) as "M*" ORDER BY time_sent
     """)
-    fun findLatest(maxSize:Int): Flow<Message>
+    fun findLatest(maxSize:Int, gameId: String): Flow<Message>
 }

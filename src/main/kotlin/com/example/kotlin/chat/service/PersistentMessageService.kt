@@ -17,17 +17,19 @@ class PersistentMessageService(private val messageRepository : MessageRepository
 
     val logger = LoggerFactory.getLogger(PersistentMessageService::class.java)
     private val maxSize = 5
-    val sender: MutableSharedFlow<MessageVM> = MutableSharedFlow(replay = maxSize)
-    override  suspend fun latest(): Flow<MessageVM>  {
-        logger.info(sender.replayCache.size.toString())
-        return sender
+    val sender: MutableSharedFlow<MessageVM> = MutableSharedFlow()
 
+    override  suspend fun latest(gameId: String): Flow<MessageVM> {
+        logger.info(gameId)
+        return messageRepository.findLatest(maxSize, gameId)
+            .mapToViewModel()
     }
+
     override suspend fun stream(): Flow<MessageVM> = sender
 
     override suspend fun post(messages: Flow<MessageVM>) {
         messages
-            .onEach {it.user.name = it.user.name.toAsterisks(); sender.emit(it) }
+            .onEach { sender.emit(it) }
             .map { it.asDomainObject() }
             .let { messageRepository.saveAll(it) }
             .collect()
