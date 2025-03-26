@@ -8,4 +8,3 @@ CREATE TABLE IF NOT EXISTS messages
     content                VARCHAR      NOT NULL,
     time_sent              TIMESTAMP    NOT NULL
 );
-

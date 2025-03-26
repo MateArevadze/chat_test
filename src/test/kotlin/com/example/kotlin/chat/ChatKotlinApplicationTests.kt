@@ -3,11 +3,7 @@ package com.example.kotlin.chat
 import app.cash.turbine.test
 import com.example.kotlin.chat.model.Message
 import com.example.kotlin.chat.model.MessageVM
-import com.example.kotlin.chat.repository.ContentType
-import com.example.kotlin.chat.repository.Message
 import com.example.kotlin.chat.repository.MessageRepository
-import com.example.kotlin.chat.service.MessageVM
-import com.example.kotlin.chat.service.UserVM
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -36,7 +32,9 @@ import kotlin.time.seconds
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     properties = [
-        "spring.r2dbc.url=r2dbc:h2:mem:///testdb;USER=sa;PASSWORD=password"
+        "spring.r2dbc.url=r2dbc:postgresql://localhost:5432/mydatabase",
+        "spring.r2dbc.username=myuser",
+        "spring.r2dbc.password=mypassword",
     ]
 )
 class ChatKotlinApplicationTests(
@@ -57,24 +55,22 @@ class ChatKotlinApplicationTests(
             val savedMessages = messageRepository.saveAll(
                 listOf(
                     Message(
+                        "user1",
+                        "test_game1",
                         "*testMessage*",
                         twoSecondBeforeNow,
-                        "test",
-                        "http://test.com"
                     ),
                     Message(
+                        "user2",
+                        "test_game2",
                         "**testMessage2**",
-                        ContentType.MARKDOWN,
                         secondBeforeNow,
-                        "test1",
-                        "http://test.com"
                     ),
                     Message(
+                        "user3",
+                        "test_game1",
                         "`testMessage3`",
-                        ContentType.MARKDOWN,
                         now,
-                        "test2",
-                        "http://test.com"
                     )
                 )
             ).toList()
@@ -97,14 +93,15 @@ class ChatKotlinApplicationTests(
             val rSocketRequester = rsocketBuilder.websocket(URI("ws://localhost:${serverPort}/rsocket"))
 
             rSocketRequester
-                .route("api.v1.messages.stream")
+                .route("api.v1.messages.stream.{gameId}", "test_game1")
                 .retrieveFlow<MessageVM>()
                 .test {
                     assertThat(expectItem().prepareForTesting())
                         .isEqualTo(
                             MessageVM(
                                 "*testMessage*",
-                                UserVM("test", URL("http://test.com")),
+                                "test_game1",
+                                "user1",
                                 now.minusSeconds(2).truncatedTo(MILLIS)
                             )
                         )
@@ -112,16 +109,9 @@ class ChatKotlinApplicationTests(
                     assertThat(expectItem().prepareForTesting())
                         .isEqualTo(
                             MessageVM(
-                                "<body><p><strong>testMessage2</strong></p></body>",
-                                UserVM("test1", URL("http://test.com")),
-                                now.minusSeconds(1).truncatedTo(MILLIS)
-                            )
-                        )
-                    assertThat(expectItem().prepareForTesting())
-                        .isEqualTo(
-                            MessageVM(
-                                "<body><p><code>testMessage3</code></p></body>",
-                                UserVM("test2", URL("http://test.com")),
+                                "`testMessage3`",
+                                "test_game1",
+                                "user3",
                                 now.truncatedTo(MILLIS)
                             )
                         )
@@ -134,7 +124,8 @@ class ChatKotlinApplicationTests(
                                 emit(
                                     MessageVM(
                                         "`HelloWorld`",
-                                        UserVM("test", URL("http://test.com")),
+                                        "test_game1",
+                                        "test",
                                         now.plusSeconds(1)
                                     )
                                 )
@@ -143,11 +134,12 @@ class ChatKotlinApplicationTests(
                             .collect()
                     }
 
-                    assertThat(expectItem().prepareForTesting())
+                   assertThat(expectItem().prepareForTesting())
                         .isEqualTo(
                             MessageVM(
-                                "<body><p><code>HelloWorld</code></p></body>",
-                                UserVM("test", URL("http://test.com")),
+                                "`HelloWorld`",
+                                "test_game1",
+                                "test",
                                 now.plusSeconds(1).truncatedTo(MILLIS)
                             )
                         )
@@ -169,7 +161,8 @@ class ChatKotlinApplicationTests(
                         emit(
                             MessageVM(
                                 "`HelloWorld`",
-                                UserVM("test", URL("http://test.com")),
+                                "test_game2",
+                                "test",
                                 now.plusSeconds(1)
                             )
                         )
@@ -186,11 +179,10 @@ class ChatKotlinApplicationTests(
                     assertThat(this.prepareForTesting())
                         .isEqualTo(
                             Message(
-                                "`HelloWorld`",
-                                ContentType.MARKDOWN,
-                                now.plusSeconds(1).truncatedTo(MILLIS),
                                 "test",
-                                "http://test.com"
+                                "test_game2",
+                                "`HelloWorld`",
+                                now.plusSeconds(1).truncatedTo(MILLIS),
                             )
                         )
                 }

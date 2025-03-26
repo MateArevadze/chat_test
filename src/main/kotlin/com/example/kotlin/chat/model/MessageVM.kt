@@ -6,3 +6,4 @@ data class MessageVM(val content: String,
                      val gameId: String,
                      val userId: String,
                      val sent: Instant)
+

@@ -16,7 +16,7 @@ class MessageResource(val messageService: MessageService) {
     suspend fun receive(@Payload inboundMessages: Flow<MessageVM>) =
         messageService.post(inboundMessages)
 
-    @MessageMapping("stream/{gameId}")
+    @MessageMapping("stream.{gameId}")
     suspend fun send(@DestinationVariable gameId: String): Flow<MessageVM> = messageService
         .stream()
         .onStart {
