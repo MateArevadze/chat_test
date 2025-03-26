@@ -6,8 +6,9 @@ import java.time.Instant
 
 @Table("MESSAGES")
 data class Message(
+    val userId: String,
+    val gameId: String,
     val content: String,
-    val sent: Instant,
-    val username: String,
+    val timeSent: Instant,
     val userAvatarImageLink: String,
     @Id var id: String? = null)

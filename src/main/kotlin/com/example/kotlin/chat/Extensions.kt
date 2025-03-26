@@ -1,6 +1,5 @@
 package com.example.kotlin.chat
 
-import com.example.kotlin.chat.model.ContentType
 import com.example.kotlin.chat.model.Message
 import com.example.kotlin.chat.model.MessageVM
 import com.example.kotlin.chat.model.UserVM
@@ -9,9 +8,10 @@ import kotlinx.coroutines.flow.map
 import java.net.URL
 
 fun MessageVM.asDomainObject(): Message = Message(
+    user.userId,
+    gameId,
     content,
     sent,
-    user.name,
     user.avatarImageLink.toString(),
     id
 )
@@ -21,8 +21,9 @@ fun String.toAsterisks() : String = this[0] + "****" + this[this.length-1]
 
 fun Message.asViewModel(): MessageVM = MessageVM(
     content,
-    UserVM(username.toAsterisks(), URL(userAvatarImageLink)),
-    sent,
+    gameId,
+    UserVM(userId, URL(userAvatarImageLink)),
+    timeSent,
     id
 )
 
