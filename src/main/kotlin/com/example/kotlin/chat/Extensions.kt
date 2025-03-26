@@ -8,9 +8,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.net.URL
 
-fun MessageVM.asDomainObject(contentType: ContentType = ContentType.MARKDOWN): Message = Message(
+fun MessageVM.asDomainObject(): Message = Message(
     content,
-    contentType,
     sent,
     user.name,
     user.avatarImageLink.toString(),
