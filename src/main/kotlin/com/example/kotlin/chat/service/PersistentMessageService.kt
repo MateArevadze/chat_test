@@ -16,11 +16,11 @@ class PersistentMessageService(private val messageRepository : MessageRepository
     : MessageService {
 
     val logger = LoggerFactory.getLogger(PersistentMessageService::class.java)
-    private val maxSize = 3
-    val sender: MutableSharedFlow<MessageVM> = MutableSharedFlow()
+    private val maxSize = 5
+    val sender: MutableSharedFlow<MessageVM> = MutableSharedFlow(replay = maxSize)
     override  suspend fun latest(): Flow<MessageVM>  {
         logger.info(sender.replayCache.size.toString())
-        return messageRepository.findLatest().mapToViewModel()
+        return sender
 
     }
     override suspend fun stream(): Flow<MessageVM> = sender
@@ -31,7 +31,6 @@ class PersistentMessageService(private val messageRepository : MessageRepository
             .map { it.asDomainObject() }
             .let { messageRepository.saveAll(it) }
             .collect()
-
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

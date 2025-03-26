@@ -12,8 +12,8 @@ interface MessageRepository : CoroutineCrudRepository<Message, String> {
         SELECT * FROM (
             SELECT * FROM MESSAGES
             ORDER BY sent DESC
-            LIMIT 10
+            LIMIT :maxSize
         ) as "M*" ORDER BY sent
     """)
-    fun findLatest(): Flow<Message>
+    fun findLatest(maxSize:Int): Flow<Message>
 }
