@@ -2,9 +2,7 @@ package com.example.kotlin.chat.controller
 
 import com.example.kotlin.chat.model.MessageVM
 import com.example.kotlin.chat.service.MessageService
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
@@ -24,5 +22,7 @@ class MessageResource(val messageService: MessageService) {
         .onStart {
             emitAll(messageService.latest(gameId))
         }
+
+
 
 }

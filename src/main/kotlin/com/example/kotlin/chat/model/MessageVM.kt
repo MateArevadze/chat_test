@@ -5,5 +5,4 @@ import java.time.Instant
 data class MessageVM(val content: String,
                      val gameId: String,
                      val userId: String,
-                     val sent: Instant,
-                     val id: String? = null)
+                     val sent: Instant)

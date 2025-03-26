@@ -10,8 +10,7 @@ fun MessageVM.asDomainObject(): Message = Message(
     userId,
     gameId,
     content,
-    sent,
-    id
+    sent
 )
 
 fun String.toAsterisks() : String = this[0] + "****" + this[this.length-1]
@@ -21,8 +20,7 @@ fun Message.asViewModel(): MessageVM = MessageVM(
     content,
     gameId,
     userId ,
-    timeSent,
-    id
+    timeSent
 )
 
 fun Flow<Message>.mapToViewModel(): Flow<MessageVM> = map { it.asViewModel() }

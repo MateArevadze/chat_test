@@ -1,26 +1,19 @@
 #!/bin/bash
 
-# Set your RSocket URL and metadata if needed
-URL="tcp://localhost:8080"  # Adjust to your RSocket server address
-REQUEST_METADATA="your-metadata"  # Optional metadata, adjust accordingly
+# Set RSocket server address
+URL="ws://localhost:7000"
 
-# Create the JSON payload for MessageVM
+# Create JSON payload
 MESSAGE_JSON=$(cat <<EOF
 {
   "content": "Hello from shell script!",
-  "user": {
-    "username": "user1",
-    "email": "user1@example.com"
-  },
+  "gameId": "game-12345",
+  "userId": "user-98765",
   "sent": "$(date --utc +%Y-%m-%dT%H:%M:%SZ)",
-  "id": "1235"
+  "id": "message-001"
 }
 EOF
 )
 
-# Send the JSON payload as a request stream
-echo "$MESSAGE_JSON" | java -jar rsc-0.9.1.jar $URL \
-  --route api.v1.messages.stream \
-  --metadata "$REQUEST_METADATA" \
-  --data "$MESSAGE_JSON" \
-  --stream
+# Send request using rsc
+echo "$MESSAGE_JSON" | java -jar "C:\Users\u\Downloads\rsc-0.9.1.jar" --channel --route api.v1.messages.stream --data "$MESSAGE_JSON" "$URL"
