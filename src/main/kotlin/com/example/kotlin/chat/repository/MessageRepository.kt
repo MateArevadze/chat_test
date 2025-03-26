@@ -4,7 +4,6 @@ import com.example.kotlin.chat.model.Message
 import kotlinx.coroutines.flow.Flow
 import org.springframework.data.r2dbc.repository.Query
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
-import org.springframework.data.repository.query.Param
 
 interface MessageRepository : CoroutineCrudRepository<Message, String> {
 
@@ -14,7 +13,7 @@ interface MessageRepository : CoroutineCrudRepository<Message, String> {
             SELECT * FROM MESSAGES
             ORDER BY sent DESC
             LIMIT 10
-        ) ORDER BY sent
+        ) as "M*" ORDER BY sent
     """)
     fun findLatest(): Flow<Message>
 }

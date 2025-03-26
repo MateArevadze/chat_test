@@ -28,4 +28,3 @@ fun Message.asViewModel(): MessageVM = MessageVM(
 
 fun Flow<Message>.mapToViewModel(): Flow<MessageVM> = map { it.asViewModel() }
 
-fun List<Message>.mapToViewModel(): List<MessageVM> = map { it.asViewModel() }
