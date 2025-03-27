@@ -28,7 +28,7 @@ class PersistentMessageService(private val messageRepository : MessageRepository
     override suspend fun post(messages: Flow<MessageDTO>) {
         messages
             .buffer(50)
-            .onEach { sender.tryEmit(it) }
+            .onEach { sender.emit(it) }
             .map { it.asDomainObject() }
             .let { messageRepository.saveAll(it) }
             .collect()
