@@ -4,4 +4,4 @@
 URL="ws://localhost:7000"
 
 # Send request using rsc
-echo "$MESSAGE_JSON" | java -jar "C:\Users\u\Downloads\rsc-0.9.1.jar" --stream --route api.v1.messages.stream.game-3456 "$URL"
+echo "$MESSAGE_JSON" | java -jar "resources/manual_tests/rsc-0.9.1.jar" --stream --route api.v1.messages.stream.game-3456 "$URL"

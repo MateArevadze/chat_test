@@ -2,7 +2,7 @@ package com.example.kotlin.chat
 
 import app.cash.turbine.test
 import com.example.kotlin.chat.model.Message
-import com.example.kotlin.chat.model.MessageVM
+import com.example.kotlin.chat.model.MessageDTO
 import com.example.kotlin.chat.repository.MessageRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -23,7 +23,6 @@ import org.springframework.messaging.rsocket.RSocketRequester
 import org.springframework.messaging.rsocket.dataWithType
 import org.springframework.messaging.rsocket.retrieveFlow
 import java.net.URI
-import java.net.URL
 import java.time.Instant
 import java.time.temporal.ChronoUnit.MILLIS
 import kotlin.time.ExperimentalTime
@@ -94,11 +93,11 @@ class ChatKotlinApplicationTests(
 
             rSocketRequester
                 .route("api.v1.messages.stream.{gameId}", "test_game1")
-                .retrieveFlow<MessageVM>()
+                .retrieveFlow<MessageDTO>()
                 .test {
                     assertThat(expectItem().prepareForTesting())
                         .isEqualTo(
-                            MessageVM(
+                            MessageDTO(
                                 "*testMessage*",
                                 "test_game1",
                                 "user1",
@@ -108,7 +107,7 @@ class ChatKotlinApplicationTests(
 
                     assertThat(expectItem().prepareForTesting())
                         .isEqualTo(
-                            MessageVM(
+                            MessageDTO(
                                 "`testMessage3`",
                                 "test_game1",
                                 "user3",
@@ -122,7 +121,7 @@ class ChatKotlinApplicationTests(
                         rSocketRequester.route("api.v1.messages.stream")
                             .dataWithType(flow {
                                 emit(
-                                    MessageVM(
+                                    MessageDTO(
                                         "`HelloWorld`",
                                         "test_game1",
                                         "test",
@@ -136,7 +135,7 @@ class ChatKotlinApplicationTests(
 
                    assertThat(expectItem().prepareForTesting())
                         .isEqualTo(
-                            MessageVM(
+                            MessageDTO(
                                 "`HelloWorld`",
                                 "test_game1",
                                 "test",
@@ -159,7 +158,7 @@ class ChatKotlinApplicationTests(
                 rSocketRequester.route("api.v1.messages.stream")
                     .dataWithType(flow {
                         emit(
-                            MessageVM(
+                            MessageDTO(
                                 "`HelloWorld`",
                                 "test_game2",
                                 "test",

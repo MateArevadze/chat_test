@@ -2,10 +2,9 @@ package com.example.kotlin.chat.service
 
 
 import com.example.kotlin.chat.asDomainObject
-import com.example.kotlin.chat.mapToViewModel
-import com.example.kotlin.chat.model.MessageVM
+import com.example.kotlin.chat.mapToDTO
+import com.example.kotlin.chat.model.MessageDTO
 import com.example.kotlin.chat.repository.MessageRepository
-import com.example.kotlin.chat.toAsterisks
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import org.slf4j.LoggerFactory
@@ -17,17 +16,17 @@ class PersistentMessageService(private val messageRepository : MessageRepository
 
     val logger = LoggerFactory.getLogger(PersistentMessageService::class.java)
     private val maxSize = 5
-    val sender: MutableSharedFlow<MessageVM> = MutableSharedFlow()
+    val sender: MutableSharedFlow<MessageDTO> = MutableSharedFlow()
 
-    override  suspend fun latest(gameId: String): Flow<MessageVM> {
+    override  suspend fun latest(gameId: String): Flow<MessageDTO> {
         logger.info(gameId)
         return messageRepository.findLatest(maxSize, gameId)
-            .mapToViewModel()
+            .mapToDTO()
     }
 
-    override suspend fun stream(): Flow<MessageVM> = sender
+    override suspend fun stream(): Flow<MessageDTO> = sender
 
-    override suspend fun post(messages: Flow<MessageVM>) {
+    override suspend fun post(messages: Flow<MessageDTO>) {
         messages
             .onEach { sender.emit(it) }
             .map { it.asDomainObject() }
