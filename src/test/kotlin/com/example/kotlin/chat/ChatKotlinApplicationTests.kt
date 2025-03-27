@@ -31,9 +31,9 @@ import kotlin.time.seconds
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     properties = [
-        "spring.r2dbc.url=r2dbc:postgresql://localhost:5432/mydatabase",
-        "spring.r2dbc.username=myuser",
-        "spring.r2dbc.password=mypassword",
+        "spring.r2dbc.url=r2dbc:postgresql://localhost:5432/postgres",
+        "spring.r2dbc.username=postgres",
+        "spring.r2dbc.password=123",
     ]
 )
 class ChatKotlinApplicationTests(

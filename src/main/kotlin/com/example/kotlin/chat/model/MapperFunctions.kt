@@ -1,7 +1,5 @@
-package com.example.kotlin.chat
+package com.example.kotlin.chat.model
 
-import com.example.kotlin.chat.model.Message
-import com.example.kotlin.chat.model.MessageDTO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

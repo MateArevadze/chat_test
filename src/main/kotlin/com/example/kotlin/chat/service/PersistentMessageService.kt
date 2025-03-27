@@ -1,11 +1,10 @@
 package com.example.kotlin.chat.service
 
 
-import com.example.kotlin.chat.asDomainObject
-import com.example.kotlin.chat.mapToDTO
 import com.example.kotlin.chat.model.MessageDTO
+import com.example.kotlin.chat.model.asDomainObject
+import com.example.kotlin.chat.model.mapToDTO
 import com.example.kotlin.chat.repository.MessageRepository
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -28,13 +27,13 @@ class PersistentMessageService(private val messageRepository : MessageRepository
 
     override suspend fun post(messages: Flow<MessageDTO>) {
         messages
-            .onEach { sender.emit(it) }
+            .buffer(50)
+            .onEach { sender.tryEmit(it) }
             .map { it.asDomainObject() }
             .let { messageRepository.saveAll(it) }
             .collect()
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun clean() {
         messageRepository.deleteAll()
     }

@@ -5,7 +5,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.0.10.RELEASE"
 	kotlin("jvm") version "1.4.10"
 	kotlin("plugin.spring") version "1.4.10"
-}
+}2
 
 group = "com.example.kotlin"
 version = "0.0.1-SNAPSHOT"

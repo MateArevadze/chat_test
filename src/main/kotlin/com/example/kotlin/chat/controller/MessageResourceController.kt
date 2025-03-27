@@ -22,7 +22,4 @@ class MessageResourceController(val messageService: MessageService) {
         .onStart {
             emitAll(messageService.latest(gameId))
         }
-
-
-
 }
